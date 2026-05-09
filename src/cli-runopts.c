@@ -962,9 +962,14 @@ static int match_extendedopt(const char** strptr, const char *optname) {
 }
 
 static int parse_flag_value(const char *value) {
-	if (strcmp(value, "yes") == 0 || strcmp(value, "true") == 0) {
+	if (strcmp(value, "yes") == 0
+		|| strcmp(value, "y") == 0
+		|| strcmp(value, "true") == 0
+		) {
 		return 1;
-	} else if (strcmp(value, "no") == 0 || strcmp(value, "false") == 0) {
+	} else if (strcmp(value, "no") == 0
+		|| strcmp(value, "n") == 0
+		|| strcmp(value, "false") == 0) {
 		return 0;
 	}
 

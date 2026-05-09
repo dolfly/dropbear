@@ -45,9 +45,8 @@ typedef struct runopts {
 	int usingsyslog;
 
 #ifndef DISABLE_ZLIB
-	/* Whether any compression is allowed. The specific method used
-	 * varies between client and server, it will be set up by kex_setup_compress() */
-	int allow_compress;
+	/* whether compression should be advertised */
+	int compression;
 #endif
 
 #if DROPBEAR_USER_ALGO_LIST

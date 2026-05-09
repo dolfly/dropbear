@@ -185,7 +185,7 @@ void cli_getopts(int argc, char ** argv) {
 	cli_opts.bind_port = NULL;
 	cli_opts.keepalive_arg = NULL;
 #ifndef DISABLE_ZLIB
-	opts.allow_compress = 1;
+	opts.compression = DROPBEAR_CLI_COMPRESSION;
 #endif
 #if DROPBEAR_USER_ALGO_LIST
 	opts.cipher_list = NULL;
@@ -579,7 +579,7 @@ void loadidentityfile(const char* filename, int warnfail) {
 static char** multihop_args(const char* argv0, const char* prior_hops) {
 	/* null terminated array */
 	char **args = NULL;
-	size_t max_args = 14, pos = 0, len;
+	size_t max_args = 16, pos = 0, len;
 #if DROPBEAR_CLI_PUBKEY_AUTH
 	m_list_elem *iter;
 #endif
@@ -619,6 +619,15 @@ static char** multihop_args(const char* argv0, const char* prior_hops) {
 		args[pos] = m_strdup("BatchMode=yes");
 		pos++;
 	}
+
+#ifndef DISABLE_ZLIB
+	if (opts.compression) {
+		args[pos] = m_strdup("-o");
+		pos++;
+		args[pos] = m_strdup("Compression=yes");
+		pos++;
+	}
+#endif
 
 	if (cli_opts.proxycmd) {
 		args[pos] = m_strdup("-J");
@@ -725,7 +734,7 @@ static void parse_multihop_hostname(const char* orighostarg, const char* argv0) 
 
 #ifndef DISABLE_ZLIB
 		/* This outer stream will be incompressible since it's encrypted. */
-		opts.allow_compress = 0;
+		opts.compression = 0;
 #endif
 	}
 
@@ -969,6 +978,9 @@ static void add_extendedopt(const char* origstr) {
 		dropbear_log(LOG_INFO, "Available options:\n"
 			"\tBatchMode\n"
 			"\tBindAddress\n"
+#ifndef DISABLE_ZLIB
+			"\tCompression\n"
+#endif
 			"\tDisableTrivialAuth\n"
 #if DROPBEAR_CLI_ANYTCPFWD
 			"\tExitOnForwardFailure\n"
@@ -1003,6 +1015,19 @@ static void add_extendedopt(const char* origstr) {
 
 	if (match_extendedopt(&optstr, "BindAddress") == DROPBEAR_SUCCESS) {
 		cli_opts.bind_arg = optstr;
+		return;
+	}
+
+	if (match_extendedopt(&optstr, "Compression") == DROPBEAR_SUCCESS) {
+		int flag = parse_flag_value(optstr);
+#ifndef DISABLE_ZLIB
+		/* Compression compiled in */
+		opts.compression = flag;
+#else
+		if (flag) {
+			dropbear_log(LOG_WARNING, "compression is not supported");
+		}
+#endif
 		return;
 	}
 

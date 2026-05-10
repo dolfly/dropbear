@@ -97,6 +97,7 @@ static void printhelp() {
 					"-m <MAC list> Specify preferred MACs for packet verification (or '-m help')\n"
 #endif
 					"-b    [bind_address][:bind_port]\n"
+					"-Q    <algo>   Print supported algorithms, or -Q help\n"
 					"-V    Version\n"
 #if DEBUG_TRACE
 					"-v    verbose (repeat for more verbose)\n"
@@ -139,6 +140,7 @@ void cli_getopts(int argc, char ** argv) {
 	const char *proxycmd_arg = NULL;
 	const char *remoteport_arg = NULL;
 	const char *username_arg = NULL;
+	const char *algo_print_arg = NULL;
 	char c;
 
 	/* see printhelp() for options */
@@ -287,6 +289,9 @@ void cli_getopts(int argc, char ** argv) {
 				case 'l':
 					next = &username_arg;
 					break;
+				case 'Q':
+					next = &algo_print_arg;
+					break;
 				case 'h':
 					printhelp();
 					exit(EXIT_SUCCESS);
@@ -410,6 +415,11 @@ void cli_getopts(int argc, char ** argv) {
 	/* -c help doesn't need a hostname */
 	parse_ciphers_macs();
 #endif
+
+	if (algo_print_arg) {
+		print_algos(algo_print_arg);
+		/* No return */
+	}
 
 	if (host_arg == NULL) { /* missing hostname */
 		printhelp();
@@ -544,7 +554,6 @@ void cli_getopts(int argc, char ** argv) {
 		loadidentityfile(DROPBEAR_DEFAULT_CLI_AUTHKEY, 0);
 	}
 #endif
-
 }
 
 #if DROPBEAR_CLI_PUBKEY_AUTH

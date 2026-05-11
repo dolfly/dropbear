@@ -1,6 +1,6 @@
 2026.91 - 10 May 2026
 
-- scp: Fix test for disallowing -r with existing target directory. The logic
+- scp: Fix disallowing -r with existing target directory. The logic
   introduced in 2026.90 was incorrect, could also disallow non-recursive
   transfers.
 

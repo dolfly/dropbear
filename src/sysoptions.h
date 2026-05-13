@@ -283,7 +283,7 @@
 #define MAX_KEX_PARTS 1000
 #endif
 
-#define MAX_HOSTKEYS 4
+#define MAX_HOSTKEYS 6
 
 /* The maximum size of the bignum portion of the kexhash buffer */
 /* K_S + Q_C + Q_S + K */

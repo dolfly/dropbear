@@ -44,7 +44,7 @@
   Patch from OpenSSH, tracked as CVE-2026-35385
 
 - Security: client/server: Fix close() of a file descriptor from an out-of-bounds
-  read. This seems dificult to exploit but may have unforseen effects.
+  read. This seems difficult to exploit but may have unforeseen effects.
   https://github.com/mkj/dropbear/commit/067fd3846c425d1998c7c94d3feafe1f26b514eb
   Reported by Ankit Singh and @j499261162
 
@@ -137,7 +137,7 @@
   Affects SSH.NET https://github.com/sshnet/SSH.NET/issues/1671
   Reported by Rob Hague.
 
-- Ignore -g -s when passwords arent enabled. Patch from Norbert Lange.
+- Ignore -g -s when passwords aren't enabled. Patch from Norbert Lange.
   Ignore -m (disable MOTD), -j/-k (tcp forwarding) when not enabled.
 
 - Report SIGBUS and SIGTRAP signals. Patch from Loïc Mangeonjean.

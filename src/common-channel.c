@@ -100,7 +100,7 @@ void chancleanup() {
 }
 
 /* Create a new channel entry, send a reply confirm or failure */
-/* If remotechan, transwindow and transmaxpacket are not know (for a new
+/* If remotechan, transwindow and transmaxpacket are not known (for a new
  * outgoing connection, with them to be filled on confirmation), they should
  * all be set to 0 */
 static struct Channel* newchannel(unsigned int remotechan, 
@@ -912,6 +912,7 @@ void recv_msg_channel_open() {
 	transwindow = buf_getint(ses.payload);
 	transmaxpacket = buf_getint(ses.payload);
 	transmaxpacket = MIN(transmaxpacket, TRANS_MAX_PAYLOAD_LEN);
+	transmaxpacket = MAX(transmaxpacket, 1);
 
 	/* figure what type of packet it is */
 	if (typelen > MAX_NAME_LEN) {
@@ -1152,6 +1153,8 @@ void recv_msg_channel_open_confirmation() {
 	channel->remotechan =  buf_getint(ses.payload);
 	channel->transwindow = buf_getint(ses.payload);
 	channel->transmaxpacket = buf_getint(ses.payload);
+	channel->transmaxpacket = MIN(channel->transmaxpacket, TRANS_MAX_PAYLOAD_LEN);
+	channel->transmaxpacket = MAX(channel->transmaxpacket, 1);
 	
 	TRACE(("new chan remote %d local %d", 
 				channel->remotechan, channel->index))
